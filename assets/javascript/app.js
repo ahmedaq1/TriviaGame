@@ -41,31 +41,34 @@ function next() {
 }
 
 
+function clear() {
+    clearInterval(timer);
+    incorrect++;
+    timeOut();
+    setTimeout(next, 3 * 1000);
 
+
+
+}
 
 function countDow() {
     counter--;
     $("#time").html("Time Remaining: " + counter);
     if (counter === 0) {
+
         clear();
+
 
 
     }
 }
 
-function clear() {
-    clearInterval(timer);
-    incorrect++;
-    next();
 
-
-
-}
 
 function loadQ() {
     var question = questions[currentQ].question;
     var choices = questions[currentQ].choices;
-    counter = 5;
+    counter = 30;
     timer = setInterval(countDow, 1000);
 
     $("#time").text("Time Remaining: " + counter);
@@ -93,13 +96,12 @@ $(document).on("click", ".choice", function() {
     if (correctAns === selectAns) {
         score++;
         timeOut("win");
-        setTimeout(3 * 1000);
-        next();
+        setTimeout(next, 3 * 1000);
 
     } else {
         incorrect++;
         timeOut();
-        next();
+        setTimeout(next, 3 * 1000);
 
     }
 
@@ -113,29 +115,34 @@ function resutl() {
     `;
 
     $("#game").html(result);
-    $(document).on("click", "#reset", function() {
-        counter = 5;
-        currentQ = 0;
-        score = 0;
-        incorrect = 0;
-        timer = null;
-
-        loadQ();
-    })
-
-    function timeOut(output) {
-        correctAns = questions[currentQ].correct;
-        if (output === "win") {
-            $('#game').html(`<p> That is correct</p>`)
 
 
-        } else {
-            $('#game').html(`<p> Try Again, the correct answer is ${correctAns}</p>`)
-
-
-        }
-
-
-    }
 }
-loadQ();
+$(document).on("click", "#reset", function() {
+    counter = 30;
+    currentQ = 0;
+    score = 0;
+    incorrect = 0;
+    timer = null;
+
+    loadQ();
+})
+
+
+function timeOut(output) {
+    var correctAns = questions[currentQ].correct;
+    if (output === "win") {
+        $('#game').html(`<p> That is correct</p>`);
+
+
+    } else {
+        $('#game').html(`<p> Try Again, the correct answer is ${correctAns}</p>`)
+    }
+
+
+}
+$("#start").click(function() {
+    $("#start").remove();
+    $("#time").html(counter);
+    loadQ();
+});
